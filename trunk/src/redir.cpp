@@ -1355,7 +1355,7 @@ long _lseek(int fd, long offset, int whence)
 	int			_errno = EBADF;
 	_FD_STRUCT*	fds;
 	DWORD		dwMoveMethod;
-	DWORD		newPos;
+	DWORD		newPos = 0xffffffff;
 
 	fds = fds_from_index(fd);
 	if (fds == NULL || fds->hFile == INVALID_HANDLE_VALUE)

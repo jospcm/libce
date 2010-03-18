@@ -2,6 +2,7 @@
  *
  *  Copyright (C) 2001-2002 Essemer Pty Ltd.  All rights reserved.
  *  http://www.essemer.com.au/
+ *  Copyright (C) 2010 Company 100 Inc.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -53,6 +54,8 @@ struct tm
 struct tm* localtime(const time_t* clock);
 struct tm * __cdecl gmtime(const time_t *clock);
 
+time_t mktime(struct tm *t);
+size_t strftime(char * const s, const size_t maxsize, const char *format, const struct tm * const t);
 
 #ifdef __cplusplus
 }

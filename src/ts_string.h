@@ -42,7 +42,7 @@ inline size_t ts_strlen(const char* str)
 	return strlen(str);
 }
 
-inline size_t ts_strlen(const unsigned short* str)
+inline size_t ts_strlen(const WCHAR* str)
 {
 	return wcslen(str);
 }
@@ -58,7 +58,7 @@ inline size_t ts_strsize(const char* str)
 	return strlen(str);
 }
 
-inline size_t ts_strsize(const unsigned short* str)
+inline size_t ts_strsize(const WCHAR* str)
 {
 	return wcslen(str)*2;
 }
@@ -74,7 +74,7 @@ inline size_t ts_strsizez(const char* str)
 	return strlen(str)+1;
 }
 
-inline size_t ts_strsizez(const unsigned short* str)
+inline size_t ts_strsizez(const WCHAR* str)
 {
 	return (wcslen(str)+1)*2;
 }
@@ -89,19 +89,19 @@ inline char* ts_strcpy(char* dest, const char* src)
 	return strcpy(dest, src);
 }
 
-inline char* ts_strcpy(char* dest, const unsigned short* src)
+inline char* ts_strcpy(char* dest, const WCHAR* src)
 {
 	unicode2ascii(src, dest);
 	return dest;
 }
 
-inline unsigned short* ts_strcpy(unsigned short* dest, const char* src)
+inline WCHAR* ts_strcpy(WCHAR* dest, const char* src)
 {
 	ascii2unicode(src, dest);
 	return dest;
 }
 
-inline unsigned short* ts_strcpy(unsigned short* dest, const unsigned short* src)
+inline WCHAR* ts_strcpy(WCHAR* dest, WCHAR* src)
 {
 	return wcscpy(dest, src);
 }
@@ -116,19 +116,19 @@ inline char* ts_strncpy(char* dest, const char* src, int n)
 	return strncpy(dest, src, n);
 }
 
-inline char* ts_strncpy(char* dest, const unsigned short* src, int n)
+inline char* ts_strncpy(char* dest, const WCHAR* src, int n)
 {
 	unicode2ascii(src, dest, n);
 	return dest;
 }
 
-inline unsigned short* ts_strncpy(unsigned short* dest, const char* src, int n)
+inline WCHAR* ts_strncpy(WCHAR* dest, const char* src, int n)
 {
 	ascii2unicode(src, dest, n);
 	return dest;
 }
 
-inline unsigned short* ts_strncpy(unsigned short* dest, const unsigned short* src, int n)
+inline WCHAR* ts_strncpy(WCHAR* dest, const WCHAR* src, int n)
 {
 	return wcsncpy(dest, src, n);
 }
@@ -143,10 +143,10 @@ inline char* ts_strcat(char* dest, const char* src)
 	return strcat(dest, src);
 }
 
-char* ts_strcat(char* dest, const unsigned short* src);
-unsigned short* ts_strcat(unsigned short* dest, const char* src);
+char* ts_strcat(char* dest, const WCHAR* src);
+WCHAR* ts_strcat(WCHAR* dest, const char* src);
 
-inline unsigned short* ts_strcat(unsigned short* dest, const unsigned short* src)
+inline WCHAR* ts_strcat(WCHAR* dest, const WCHAR* src)
 {
 	return wcscat(dest, src);
 }
@@ -161,14 +161,14 @@ inline char* ts_strdup(const char* str)
 	return _strdup(str);
 }
 
-char* ts_strdup_unicode_to_ascii(const unsigned short* str);
+char* ts_strdup_unicode_to_ascii(const WCHAR* str);
 
-inline unsigned short* ts_strdup(const unsigned short* str)
+inline WCHAR* ts_strdup(const WCHAR* str)
 {
 	return wcsdup(str);
 }
 
-unsigned short* ts_strdup_ascii_to_unicode(const char* str);
+WCHAR* ts_strdup_ascii_to_unicode(const char* str);
 
 
 #endif /* __wcecompat__ts_string_h__ */

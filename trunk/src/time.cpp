@@ -403,7 +403,7 @@ time_t w32_filetime_to_time_t(FILETIME* ft)
 	if (cmp64((ULARGE_INTEGER*)ft, (ULARGE_INTEGER*)&ftJan1970) < 0)
 	{
 		errno = -1;
-		return -1;
+		return (time_t)(-1);
 	}
 
 	// subtract ftJan1970 from ft
@@ -416,7 +416,7 @@ time_t w32_filetime_to_time_t(FILETIME* ft)
 	if (ft->dwHighDateTime != 0 || ft->dwLowDateTime >= 2147483648)
 	{
 		errno = -1;
-		return -1;		// value is too big to return in time_t
+		return (time_t)(-1);		// value is too big to return in time_t
 	}
 
 	return (time_t)ft->dwLowDateTime;
@@ -434,7 +434,7 @@ time_t time(time_t* t)
 	if (!SystemTimeToFileTime(&stNow, &ftNow))
 	{
 		errno = -1;
-		return -1;
+		return (time_t)(-1);
 	}
 
 	tt = w32_filetime_to_time_t(&ftNow);

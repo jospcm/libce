@@ -103,9 +103,9 @@ typedef struct _FD_BLOCK {
 _FD_BLOCK	_fd_block0 = {
 	0x00000007,	// first three in use (reserved)
 	{
-		{ NULL, -1, INVALID_HANDLE_VALUE, FALSE, FALSE },
-		{ NULL, -1, INVALID_HANDLE_VALUE, FALSE, FALSE },
-		{ NULL, -1, INVALID_HANDLE_VALUE, FALSE, FALSE }
+		{ NULL, 0xff, INVALID_HANDLE_VALUE, FALSE, FALSE },
+		{ NULL, 0xff, INVALID_HANDLE_VALUE, FALSE, FALSE },
+		{ NULL, 0xff, INVALID_HANDLE_VALUE, FALSE, FALSE }
 	}
 };
 _FD_BLOCK*	_fd_blocks[FD_MAX_BLOCKS] = { &_fd_block0 };
@@ -917,7 +917,7 @@ static bool _wopen_fds(const WCHAR* filename, int flags, int mode, _FD_STRUCT* f
 	}
 
 	fds->pipe = NULL;
-	fds->pipeChannel = -1;
+	fds->pipeChannel = 0xff;
 	fds->hFile = hFile;
 	fds->binary = (flags & O_BINARY);
 	fds->eof = FALSE;

@@ -34,8 +34,9 @@ extern int errno;
 #define EBADF	(9)
 #define EAGAIN	(11)
 #define ENOMEM	(12)
+#define	EACCES  (13)    /* Permission denied */
 #define EINVAL	(22)
-
+#define	ENOSPC  (28)    /* No space left on device */
 
 #ifdef __cplusplus
 }

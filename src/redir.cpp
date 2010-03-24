@@ -1217,21 +1217,6 @@ size_t fwrite(const void* buffer, size_t size, size_t count, FILE* stream)
 	return numWritten/size;
 }
 
-FILE* _getstdfilex(int n)
-{
-	switch (n)
-	{
-		case STDIN:
-			return (FILE*)stdin;
-		case STDOUT:
-			return (FILE*)stdout;
-		case STDERR:
-			return (FILE*)stderr;
-		default:
-			return NULL;
-	}
-}
-
 int _fileno(FILE* stream)
 {
 	return ((_FILE*)stream)->file_index;

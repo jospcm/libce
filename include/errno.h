@@ -30,6 +30,10 @@ extern "C" {
 
 extern int errno;
 
+#ifndef _INC_ALTCECRT
+/* As altcecrt.h defines errno constants,
+   check if _INC_ALTCECRT is defined to avoid macro redefinition. */
+
 #define ENOENT	(2)
 #define EBADF	(9)
 #define EAGAIN	(11)
@@ -37,6 +41,8 @@ extern int errno;
 #define	EACCES  (13)    /* Permission denied */
 #define EINVAL	(22)
 #define	ENOSPC  (28)    /* No space left on device */
+
+#endif
 
 #ifdef __cplusplus
 }

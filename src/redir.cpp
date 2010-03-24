@@ -1565,18 +1565,6 @@ int vfprintf(FILE* stream, const char* format, va_list argptr)
 	return fwrite(buffer, 1, strlen(buffer), stream);
 }
 
-int fprintf(FILE* stream, const char* format, ...)
-{
-	int		result;
-	va_list	args;
-
-	va_start(args, format);
-	result = vfprintf(stream, format, args);
-	va_end(args);
-
-	return result;
-}
-
 FILE* _wfdopen(void* handle, const wchar_t* mode)
 {
 //	if (fprintf(stderr, "NOT IMPLEMENTED: _wfdopen(handle=%p, mode=\"%s\")\n", handle, mode) <= 0)

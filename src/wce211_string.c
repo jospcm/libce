@@ -53,17 +53,6 @@ _CRTIMP int __cdecl _strnicmp(const char* s1, const char* s2, size_t n)
 	return c1 - c2;
 }
 
-_CRTIMP char* __cdecl strrchr(const char* s, int c)
-{
-	const char*	p = s + strlen(s) - 1;
-	while (p >= s)
-	{
-		if (*p == c)
-			return (char*)p;
-	}
-	return NULL;
-}
-
 _CRTIMP char* __cdecl _strdup(const char* s)
 {
 	char* new_s = (char*)malloc(strlen(s)+1);

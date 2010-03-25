@@ -933,134 +933,6 @@ cleanup:
 	return result;
 }
 
-FILE* fopen(const char* filename, const char* mode)
-{
-	bool	result = false;
-	bool	mode_r = false;
-	bool	mode_w = false;
-	bool	mode_a = false;
-	bool	mode_r_plus = false;
-	bool	mode_w_plus = false;
-	bool	mode_a_plus = false;
-	bool	mode_t = false;
-	bool	mode_b = false;
-	int		num_rwa;
-	int		flags = 0;
-	int		pmode = 0;
-	int		fd = -1;
-	_FILE*	file = NULL;
-
-	if (filename == NULL || mode == NULL)
-		return NULL;
-
-	file = file_allocate();
-	if (file == NULL)
-		return NULL;
-
-	while (*mode != 0)
-	{
-		switch (*mode)
-		{
-			case 'r':
-				if (*(mode+1) == '+')
-				{
-					mode_r_plus = true;
-					mode++;
-				}
-				else
-					mode_r = true;
-				break;
-			case 'w':
-				if (*(mode+1) == '+')
-				{
-					mode_w_plus = true;
-					mode++;
-				}
-				else
-					mode_w = true;
-				break;
-			case 'a':
-				if (*(mode+1) == '+')
-				{
-					mode_a_plus = true;
-					mode++;
-				}
-				else
-					mode_a = true;
-				break;
-			case 't':
-				mode_t = true;
-				break;
-			case 'b':
-				mode_b = true;
-				break;
-		}
-		mode++;
-	}
-	num_rwa = 0;
-	if (mode_r)         num_rwa++;
-	if (mode_w)         num_rwa++;
-	if (mode_a)         num_rwa++;
-	if (mode_r_plus)    num_rwa++;
-	if (mode_w_plus)    num_rwa++;
-	if (mode_a_plus)    num_rwa++;
-	if (num_rwa != 1)
-		goto cleanup;
-	if (mode_t && mode_b)
-		goto cleanup;
-
-	// r  =                   O_RDONLY
-	// w  = O_CREAT|O_TRUNC | O_WRONLY
-	// a  = O_CREAT         | O_WRONLY | O_APPEND
-	// r+ =                   O_RDWR
-	// w+ = O_CREAT|O_TRUNC | O_RDWR
-	// a+ = O_CREAT         | O_RDWR   | O_APPEND
-	if (mode_w || mode_a || mode_w_plus || mode_a_plus)
-	{
-		flags |= O_CREAT;
-		pmode = S_IREAD | S_IWRITE;
-	}
-	if (mode_w || mode_w_plus)
-		flags |= O_TRUNC;
-	if (mode_r)
-		flags |= O_RDONLY;
-	else if (mode_w || mode_a)
-		flags |= O_WRONLY;
-	else
-		flags |= O_RDWR;
-	if (mode_a || mode_a_plus)
-		flags |= O_APPEND;
-	if (mode_t)
-		flags |= O_TEXT;
-	if (mode_b)
-		flags |= O_BINARY;
-
-	fd = open(filename, flags, pmode);
-	if (fd == -1)
-		goto cleanup;
-
-	file->fd = fd;
-	file->bufferedChar = -1;
-	file->error = FALSE;
-
-	result = true;
-
-cleanup:
-
-	if (result == false)
-	{
-		if (file != NULL)
-		{
-			file_release(file);
-			file = NULL;	// returned below
-		}
-		if (fd != -1)
-			close(fd);
-	}
-
-	return (FILE*)file;
-}
-
 int close(int fd)
 {
 	bool		result = false;
@@ -1083,26 +955,6 @@ cleanup:
 		errno = -1;
 
 	return result ? 0 : -1;
-}
-
-int fclose(FILE* stream)
-{
-	_FILE*	file = (_FILE*)stream;
-	bool	result = false;
-
-	if (file == NULL)
-		return EOF;
-
-	if (close(file->fd) != 0)
-		goto cleanup;
-
-	file_release(file);
-
-	result = true;
-
-cleanup:
-
-	return result;
 }
 
 int read(int fd, void* buffer, unsigned int count)
@@ -1139,23 +991,6 @@ int read(int fd, void* buffer, unsigned int count)
 		return 0;
 
 	return (int)numRead;
-}
-
-size_t fread(void* buffer, size_t size, size_t count, FILE* stream)
-{
-	_FILE*	file = (_FILE*)stream;
-	int		read_result;
-	DWORD	numRead;
-
-	if (file == NULL)
-		return 0;
-
-	read_result = read(file->fd, buffer, size*count);
-	numRead = (read_result == -1) ? 0 : read_result;
-	if (read_result == -1)
-		file->error = TRUE;
-
-	return numRead/size;
 }
 
 int write(int fd, const void* buffer, unsigned int count)
@@ -1198,23 +1033,6 @@ int write(int fd, const void* buffer, unsigned int count)
 		return 0;
 
 	return (int)numWritten;
-}
-
-size_t fwrite(const void* buffer, size_t size, size_t count, FILE* stream)
-{
-	_FILE*	file = (_FILE*)stream;
-	int		write_result;
-	DWORD	numWritten;
-
-	if (file == NULL)
-		return 0;
-
-	write_result = write(file->fd, buffer, size*count);
-	numWritten = (write_result == -1) ? 0 : write_result;
-	if (write_result == -1)
-		file->error = TRUE;
-
-	return numWritten/size;
 }
 
 int _fileno(FILE* stream)
@@ -1273,28 +1091,6 @@ cleanup:
 		errno = EBADF;
 
 	return result;
-}
-
-int feof(FILE* stream)
-{
-	_FILE*	file = (_FILE*)stream;
-
-	if (file == NULL)
-		return EOF;
-
-	// since we don't have buffering, just return low-level eof
-	// TODO: when buffering is implemented, this will need more work
-	return _eof(file->fd) == 1 ? 1 : 0;
-}
-
-int ferror(FILE* stream)
-{
-	_FILE*	file = (_FILE*)stream;
-
-	if (file == NULL)
-		return 0;
-
-	return file->error;
 }
 
 void clearerr(FILE* stream)

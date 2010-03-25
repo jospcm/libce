@@ -1296,21 +1296,6 @@ char* fgets(char* string, int n, FILE* stream)
 	return result;
 }
 
-int fputc(int ch, FILE* stream)
-{
-	char	buffer[1] = { ch };
-	if (fwrite(buffer, 1, 1, stream) == 1)
-		return ch;
-	return EOF;
-}
-
-int fputs(const char* string, FILE* stream)
-{
-	if (fwrite(string, strlen(string), 1, stream) == 1)
-		return 0;
-	return EOF;
-}
-
 int ungetc(int c, FILE* stream)
 {
 	_FILE*	file = (_FILE*)stream;

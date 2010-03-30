@@ -1320,17 +1320,6 @@ int fscanf(FILE* stream, const char* format, ...)
 	return EOF;
 }
 
-int vfprintf(FILE* stream, const char* format, va_list argptr)
-{
-	// TODO: use smaller buffer for short output, enable longer output
-	char	buffer[4096];
-
-	if (_vsnprintf(buffer, sizeof(buffer), format, argptr) == -1)
-		buffer[sizeof(buffer)-1] = '\0';
-
-	return fwrite(buffer, 1, strlen(buffer), stream);
-}
-
 FILE* _wfdopen(void* handle, const wchar_t* mode)
 {
 //	if (fprintf(stderr, "NOT IMPLEMENTED: _wfdopen(handle=%p, mode=\"%s\")\n", handle, mode) <= 0)

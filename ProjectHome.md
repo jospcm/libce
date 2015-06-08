@@ -1,0 +1,1 @@
+libce plugs the holes in Microsoft Visual C++ runtime for Windows CE, making it more compatible with ANSI C. It is derived from wcecompat.
